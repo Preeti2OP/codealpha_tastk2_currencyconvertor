@@ -1,0 +1,77 @@
+from tkinter import*
+from tkinter import ttk,messagebox
+import requests
+import json
+
+root=Tk()
+root.title("CURRENCY CONVERTER")
+root.geometry('500x550')
+icon=PhotoImage(file="pngwing.com (7).png")
+root.iconphoto(False,icon)
+
+#Label formation
+
+frame1=Frame(root,bg='white',width='800',height='100')
+frame1.grid(row=0,column=0)
+name_label=Label(frame1,text='Currency Converter',bg='#081F4D',pady=30,padx=110,fg='white',font='segoe 30 bold')
+name_label.grid(row=0,column=0)
+
+frame2=Frame(root,width='500',height='350')
+frame2.grid(row=1,column=0)
+from_label=Label(frame2,text='FROM',pady=30,padx=30,fg='black',font='segoe 20 bold')
+from_label.place(x=0,y=0)
+#combo1=ttk.Combobox(frame2,width=25)
+#combo1.place(x=0,y=60)
+
+to_label=Label(frame2,text='TO',pady=30,padx=30,fg='black',font='segoe 20 bold')
+to_label.place(x=250,y=0)
+#combo2=ttk.Combobox(frame2,width=25)
+#combo2.place(x=250,y=60)
+
+amount_label=Label(frame2,text='AMOUNT',font='segoe 20 bold')
+amount_label.place(x=0,y=95)
+amount_entry=Entry(frame2,width='20',font='segoe 16 italic')
+amount_entry.place(x=0,y=130)
+
+output_label=Label(frame2,text='',font='segoe 23 bold')
+output_label.place(x=0,y=150)
+
+time_label=Label(frame2,text='',font='segoe 23  bold')
+time_label.place(x=0,y=190)
+
+
+#api genrating
+#API is a tool that provides current and historical exchange rates. It helps you easily integrate currency data into your web application.
+#format: json 
+
+api_key='531fd05d2e78a9125d4981b5'
+url=f'https://v6.exchangerate-api.com/v6/531fd05d2e78a9125d4981b5/latest/USD'
+
+#making the Standard request to the API and converting the request to json
+#converting the currencies to dictionaries
+
+response = requests.get(f'https://v6.exchangerate-api.com/v6/531fd05d2e78a9125d4981b5/latest/USD').json()
+currencies = dict(response['conversion_rates'])
+combo1=ttk.Combobox(frame2,width=25,values=list(currencies.keys()))
+combo1.place(x=0,y=60)
+combo2=ttk.Combobox(frame2,width=25,values=list(currencies.keys()))
+combo2.place(x=250,y=60)
+
+
+#function formation
+def currency_converter():
+        output= requests.get(f'https://v6.exchangerate-api.com/v6/531fd05d2e78a9125d4981b5/pair/combo1.get()/combo2.get()/amoount_entry.get()').json()
+        result = output['conversion_result']
+        converted_result = result['conversion_result']
+        formatted_result = f'amoount_entry.get() combo1.get() = {converted_result} combo2.get()'
+        output_label.config(text=formatted_result)
+        time_label.config(text='Last updated,' + result['time_last_update_utc'])
+
+
+#button formation
+
+button=Button(frame2,text='CONVERT',bg='#081F4D',fg='white',font='segoe 20 bold',command=currency_converter)
+button.place(x=250,y=260)
+
+root.mainloop()
+
