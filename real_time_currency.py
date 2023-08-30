@@ -3,6 +3,13 @@ from tkinter import ttk
 import requests
 from ttkthemes import ThemedTk
 
+
+root = ThemedTk(theme="arc")  
+root.title("CURRENCY CONVERTER")
+root.geometry('500x500')
+icon=PhotoImage(file="pngwing.com (7).png")
+root.iconphoto(False,icon)
+
 def currency_converter():
     try:
         selected_currency_from = combo1.get()
@@ -31,9 +38,13 @@ def currency_converter():
         time_label.config(text='')
         print("An error occurred:", e)
 
-root = ThemedTk(theme="arc")  
-root.title("CURRENCY CONVERTER")
-root.geometry('500x500')
+def swap_currencies():
+    selected_currency_from = combo1.get()
+    selected_currency_to = combo2.get()
+    combo1.set(selected_currency_to)
+    combo2.set(selected_currency_from)
+
+#Label formation
 
 frame1 = Frame(root, bg='#081F4D', width='500', height='100')
 frame1.pack(fill='both', expand=True)
@@ -67,8 +78,10 @@ output_label.grid(row=4, column=0, columnspan=2, pady=15)
 time_label = Label(frame2, text='', font='segoe 12 italic', fg='gray')
 time_label.grid(row=5, column=0, columnspan=2)
 
-button = Button(frame2, text='CONVERT', bg='#081F4D', fg='white', font='segoe 16 bold', command=currency_converter)
-button.grid(row=6, column=0, columnspan=2, pady=15)
+
+#Api genrating
+#API is a tool that provides current and historical exchange rates. It helps you easily integrate currency data into your web application.
+#format: json 
 
 url_base = 'https://v6.exchangerate-api.com/v6/531fd05d2e78a9125d4981b5/latest/'
 
@@ -82,5 +95,14 @@ try:
         print("Unable to fetch currency data.")
 except requests.exceptions.RequestException as e:
     print("An error occurred while fetching currency data:", e)
+
+#Button formation
+
+button = Button(frame2, text='CONVERT', bg='#081F4D', fg='white', font='segoe 16 bold', command=currency_converter)
+button.grid(row=6, column=0, columnspan=2, pady=15)
+
+swap_button = Button(frame2, text='SWAP', bg='gray', fg='white', font='Arial 16 bold', command=swap_currencies)
+swap_button.grid(row=6, column=2, columnspan=2, pady=10)
+
 
 root.mainloop()
